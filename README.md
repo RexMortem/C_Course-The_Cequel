@@ -1,8 +1,8 @@
-# C Course Session 1 
+# C Course Session 2
 
 A basic, and hopefully gentle, introduction to the C Programming Language.
 
-This session covers the very basics of C i.e. concepts that are present in most other languages like variables, for loops, and arrays; this session will also introduce the concept of undefined behaviour and how C likes to handle - or not handle - things. 
+(UNDER CONSTRUCTION)
 
 ## What is the C Course?
 
