@@ -146,14 +146,17 @@ The syntax of declaring a function:
 
 ### <a name="Main"> Revisiting Main </a>
 
+### <a name="FunctionExercises1"> Function Exercises 1 </a>
 
 ### <a name="PassingPointers"> Passing Around Pointers </a>
 
 - Mention that this is a way of returning multiple arguments 
-- arguments: difference between passing a pointer, and passing a regular old value 
+- arguments: difference between passing a pointer, and passing a regular old value
+ 
+### <a name=""> Pointers to Functions </a>
 
 
-### <a name="FunctionExercises"> Function Exercises </a>
+### <a name="FunctionExercises2"> Function Exercises 2 </a>
 
 
 
