@@ -360,8 +360,6 @@ The **main** function gets:
 
 Right now, we won't question *how* pointers to characters are entire strings and just use **%s** to print them. 
 
-One confusing way of writing **main** is with **void** in place of arguments, because 
-
 ### <a name="FunctionExercises1"> Function Exercises 1 </a>
 
 1) In higher-level languages, you have to return a value from a non-void function. In **C**, you can return nothing from a non-void function like so:
