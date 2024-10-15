@@ -5,7 +5,7 @@ Welcome to the Cequel!
 
 I hope you enjoyed Session 1 and are now comfortable with using variables, for loops, and if statements to create very basic **C** programs (including commenting and being able to compile your code), and are familiar with arrays and the interesting part of **C**: undefined behaviour and how you can do many things in **C** which shouldn't be allowed (we'll see some more examples in this session!).  
 
-It's getting to the harder - but more interesting - stuff ...
+It's getting to the harder - but more interesting - stuff. **Don't worry if you don't finish the session in time**, you can always finish off Session 2 in the Session 3 workshop! We have an optional Session 4 for a reason (there are also optional problems in Session 4 for those who have finished Sessions 1-3).
 
 Good luck and happy coding!
 
@@ -207,7 +207,18 @@ int sumTwoInts(int a, int b){
 }
 ```
 
-Or even simpler:
+The **return** statement here returns an int and ends the function there. If you have any statements *past* a return statement, then they will never execute. For example:
+
+```c
+int sumTwoInts(int a, int b){
+    int result = a + b;
+    return result;
+    // any statements from here do not run 
+    printf("This statement is unreachable!\n");
+}
+```
+
+We can write the function even simpler:
 ```c
 int sumTwoInts(int a, int b){
     return a + b;
