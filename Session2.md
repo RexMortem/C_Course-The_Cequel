@@ -32,8 +32,9 @@ Good luck and happy coding!
     - <a href="#PointerArithmetic" style="color: black;"> Pointer Arithmetic </a>
     - <a href="#PointerArithmetic" style="color: black;"> Array Exercises </a>
 - <a href="#Strings" style="color: black;"> Strings </a>
+    - <a href="#StringLiteral" style="color: black;"> Initialising Strings With Literals </a>
+    - <a href="#StringManipulation" style="color: black;"> String Manipulation </a>
     - <a href="#StringExercises" style="color: black;"> String Exercises </a>
-- <a href="#Input" style="color: black;"> Reading Input </a>
 - <a href="#Memory" style="color: black;"> Memory Allocation </a>
     - <a href="#Malloc" style="color: black;"> Malloc </a>
     - <a href="#Malloc" style="color: black;"> Realloc </a>
@@ -155,11 +156,27 @@ char* p2 = NULL;
 short* p3 = NULL;
 ```
 
-Note that the definition for the null pointer lives inside 
+Note that the definition for the null pointer lives inside several libraries including `stdio.h`, so include one of them if you want to use `NULL`. 
+
+The null pointer is quite useful for actions which *should* give you a pointer but may fail (in that case, you'd want to give a null pointer).
+
 ### <a name="PointerExercises"> Pointer Exercises </a>
 
-- Hex and Binary exercise (explain how to use)
+1) 
 
+2) You can set ints directly to binary or hex values like so:
+```c
+int a = 0x5F;
+printf("%d\n", a); // 95
+
+int b = 0b01101;
+printf("%d\n", b); // 13
+```
+
+- For binary, you start it with `0b` (**b** for **b**inary)
+- For hex, you start it with `0x` (**x** for he**x**)
+
+Can you print your name out using binary or hex values? 
 
 ## <a name="Functions"> Functions </a>
 
@@ -253,6 +270,42 @@ Now we cannot compile this code if we call scream with arguments since **C** wil
 
 ### <a name="FunctionPrototypes"> Function Prototypes </a>
 
+Some programmers like to put **main** at the top, since seeing the entry-point of the program first is quite useful for going through tons of different code files. When we have other functions, we run into a problem: 
+
+```c
+#include <stdio.h>
+
+int main(){
+    printf("%d\n", diff(19, 16));
+}
+
+int diff(int a, int b){
+    return a - b;
+}
+```
+
+The main function can't see `diff` since it's initialised after main (some compilers will make this work anyway but we want to write good **C** code that works for all valid **C** compilers).
+
+We can still achieve this by **prototyping** functions:
+
+
+```c
+#include <stdio.h>
+
+int diff(int a, int b);
+
+int main(){
+    printf("%d\n", diff(19, 16));
+}
+
+int diff(int a, int b){
+    return a - b;
+}
+```
+
+When we prototype a function, we don't include the body of it (the statements that make it actually work); we just include its return type, name, and arguments. 
+
+You can think of prototyping a function as *declaring* the function, and writing the full function as *initialising* the function.
 
 
 ### <a name="Main"> Revisiting Main </a>
@@ -515,20 +568,85 @@ int main(){
 
 ## <a name="Strings"> Strings </a>
 
+Strings are an array of characters, and so we've only come to them after thoroughly discussing arrays. They're special arrays because the end of the string is marked by a special character `\0` which is called the **null** character. The null character tells you when you're at the end of your string 🔫
+
+Let's make a string from scratch to see how this works: 
+```c
+char myName[] = {'e', 'd', 'w', 'a', 'r', 'd', '\0'};
+printf("%s\n", myName); // edward
+```
+*Works as expected*
+
+Cool, what about if we forget the null character at the end?
+
+```c
+char myNameWithoutNull[] = {'e', 'd', 'w', 'a', 'r', 'd'};
+printf("%s\n", myNameWithoutNull); // edward└‼í (undefined behaviour)
+```
+
+That... prints a bunch of gibberish. Again, undefined behaviour. What if we put the null character in the middle of some text?
+
+```c
+char partOfMyName[] = {'e', 'd', '\0', 'w', 'a', 'r', 'd'};
+printf("%s\n", partOfMyName); // ed
+```
+
+Pretty much what we expected; it outputs up to the null character. 
+
+**Fun fact:** The null character is a *sentinel value* which is a fancy word for a value that indicates the end of a sequence of data. 
+
+### <a name="StringLiteral"> Initialising Strings More Easily </a>
+
+It's kind of awkward to write a string as a character array, given how much we use strings. Fortunately, **C** gives us a way to initialise a string without having to write that all out.
+
+```c
+char myName[] = "edward";
+printf("%s\n", myName); // edward
+```
+
+**C** helps us out and slaps on that invisible `\0` at the end! When you use `""`, you're creating a string literal. Technically, when you've assigning ints with values, those values are called integer literals. 
+
+### <a name="StringManipulation"> String Manipulation </a>
+
+All you need to manipulate strings (in most ways) is to ~~be really good at gaslighting~~ be able to edit each character, and traverse through the entire string. If your manipulation requires more space than the string already has (like if you're "doubling" the string), then you can use the functions in the <a href="#Memory"> memory section </a> for that. 
+
+Editing each character is pretty simple since it's an array. 
+
+```c
+
+char myName[] = "Edward";
+
+myName[3] = 'i';
+myName[4] = 'n';
+myName[5] = '\0'; // now myName = {'E', 'd', 'w', 'i', 'n', '\0', '\0'};
+
+printf("%s\n", myName); // Edwin
+```
+
+Traversing is a little tricky because we need to iterate through the string until we see `\0`. We can use something called a **while loop** for that! A while loop keeps iterating while the condition you give it is true - the while loop terminates after an iteration ends where the condition is false. 
+
+![Syntax for a while loop](images/WhileLoopSyntax.PNG)
+
+So if we want to replace all the characters in a string with 'A':
+
+```c
+char someText[] = "Hello, my name is Ed!";
+
+int currentIndex = 0; 
+
+while(someText[currentIndex] != '\0'){
+    someText[currentIndex] = 'A';
+    currentIndex++;
+}
+
+printf("%s\n", someText); // AAAAAAAAAAAAAAAAAAAAA
+```
+
 ### <a name="StringExercises"> String Exercises </a>
 
 1) Write a function to reverse a string (this function should be of type void).
 
 2) Write a function to convert a string to all upper-case character (**hint:** look up the range of values for lower-case characters in ascii)
-
-## Input 
-
-- a mid-way (maybe end-level) exercise: create a function for processing int input safely 
-
-USEFUL ARTICLE: https://www.geeksforgeeks.org/all-forms-of-formatted-scanf-in-c/
-USEFUL EXERCISE: https://www.hackerrank.com/challenges/playing-with-characters/problem?isFullScreen=true
-
-- Recommend Hackerrank? 
 
 ## <a name="Macros"> Preprocessing and Macros </a>
 
@@ -553,12 +671,7 @@ It can be useful to define **true** and **false** in this way:
 
 You might ask: **why use macros?** 
 
-There are a couple reasons but one is **performance** 
-- no memory used for variable
-- no cost from using the variable, or calling a function 
-- 
-
-- mention it'll be useful for next session (sneak peak?)
+There are a couple reasons but one is **performance**, since replacing macro names with their replacement text happens during *preprocessing* and not during execution. Therefore, you avoid the cost of having a variable and memory and accessing it. 
 
 ## <a name="Memory"> Memory Allocation </a>
 
@@ -582,26 +695,76 @@ char* cP = malloc(10 * sizeof(int)); // 40 bytes on my machine
 
 Which, assuming an int takes up 4 times the space of a char (it does on my machine), is a block of memory that can store 40 chars. 
 
+I've been calling it a 'block of memory' and the reason for this is from the <a href="#ArrayDecay"> array decay section </a>; it's not an array because `sizeof(cP)` gives us the size of the pointer and not the size of the block of memory. 
 
-- malloc, calloc, realloc
+### <a name="MemoryLeaks"> Freeing memory </a>
+
+After we're done with a block of memory, we need to cleanup our mess since **C** doesn't know when we don't need the memory anymore. When we're done with it, we use the **free** function to release the memory into the wild. 
+
+```c
+char* longString = malloc(1000 * sizeof(int));
+
+for(int i = 0; i < 999; i++){
+    longString[i] = 'A';
+}
+
+longString[999] = '\0';
+printf("%s\n", longString);
+
+// we're done with the string now
+free(longString);
+```
+
+If we do not free memory, then a **memory leak** will occur; this is when memory is marked as used up, but it's not being used! This can lead to a program running out of memory even if it has plenty of memory to use - that memory is just marked as being used when it's not.
+
+It's considered **good practice** to set the pointer to `null` after freeing the pointer in case the pointer is interacted with (and checked if it is null). 
+
+### <a name="AllocationFail"> What if allocation fails? </a>
+
+Sometimes, memory allocation might fail; perhaps the memory you're requesting is simply too large. 
+
+When memory allocation fails, **malloc** will simply return a null pointer which we can check for. We can decide to handle this however we want, so we'll just tell the user that it's failed in the following example:
+
+```c
+int main(){
+    char* cP = malloc(1000 * sizeof(int));
+
+    if (cP == NULL){ // handle failure
+        printf("Uh oh spaghettios! Memory allocation failed\n");
+        return -1;
+    }
+
+    free(cP);
+
+    return 0;
+}
+```
 
 ## Next Session…
 
 Well done on completing Session 2! You're almost through to the end; just one more session to go... 
 
-If you're not tired of **C** by then, then remember there's a bonus session on the 30th October! Hopefully, I'll **C** you there!
+Next session, we'll equip you with the tools to write larger and more complex programs such as using Makefiles, structs, and more preprocessor directives. We will also *finally* learn how to read in input from the user! 
 
-- maybe do static keyword? 
-
-- do structs and unions!
-
-- Makefiles (and multiple files) -> header files? More complicated macros!
+If you're not tired of **C** by then, then remember there's a bonus session on the 30th October - hopefully, I'll **C** you there!
 
 ## <a name="OptionalExercises"> Optional Exercises </a> 
 
-Not sure what to put here yet 
+*Solutions for the Optional Exercises will be released at a later date* 
+
+1) An ArrayList is a data structure that expands when you run out of space to put elements in. Create an ArrayList by initialising the following function prototypes:
+
+```c
+int* createArrayList(int initialSize);
+int* resizeArrayList(int newSize); // (should be called by other functions)
+int insertIntoArrayList(int* array, int index, int newItem); // (return the new size of the array)
+int removeFromArrayList(int* array, int indexToRemoveFrom); // (make the other values slide down, returns the new size of the array)
+```
+
+We will see next session how we might create a more ergonomic ArrayList. 
+
+2) Create a Stack. 
 
 ## Acknowledgements
 
-Thanks to ...
 Originally created by Edward Denton. 
