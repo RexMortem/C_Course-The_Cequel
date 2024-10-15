@@ -2,7 +2,7 @@
 
 A basic, and hopefully gentle, introduction to the C Programming Language.
 
-This session focuses on pointers, functions, and memory allocation; these are **hard** concepts and there's **a lot** of content, so please do not worry if you do not finish this session on time! You can work on this session in the next workshop and in the optional Session 4 workshop (which also has optional problems for people who have finished Sessions 1-3).
+This session focuses on pointers, functions, and memory allocation; these are **hard** concepts and there's ****a lot** of content, so please do not worry if you do not finish this session on time! You can work on this session in the next workshop and in the optional Session 4 workshop (which also has optional problems for people who have finished Sessions 1-3).
 
 ## What is the C Course?
 
