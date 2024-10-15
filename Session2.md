@@ -22,12 +22,18 @@ Good luck and happy coding!
 - <a href="#Functions" style="color: black;"> Functions </a>
     - <a href="#Void" style="color: black;"> Void </a>
     - <a href="#FunctionPrototypes" style="color: black;"> Function Prototypes </a>
-    - <a href="#Functions" style="color: black;"> Revisiting Hello World </a>
-
+    - <a href="#Main" style="color: black;"> Revisiting Hello World </a>
+    - <a href="#FunctionExercises1" style="color: black;"> Function Exercises 1 </a>
+    - <a href="#PassingPointers" style="color: black;"> Passing Around Pointers </a>
+    - <a href="#FunctionExercises2" style="color: black;"> Function Exercises 2 </a>
+- <a href="#Arrays" style="color: black;"> Revisiting Arrays </a>
 - <a href="#Input" style="color: black;"> Reading Input </a>
-
-
-- Finish exercises for pointers
+- <a href="#Memory" style="color: black;"> Memory Allocation </a>
+    - <a href="#Malloc" style="color: black;"> Malloc </a>
+    - <a href="#Malloc" style="color: black;"> Realloc </a>
+    - <a href="#Malloc" style="color: black;"> Calloc </a>
+    - <a href="#Malloc" style="color: black;"> Memory Exercises </a>
+- <a href="#Optional" style="color: black;"> Optional Exercises </a>
 
 ## <a name="Pointers"> Pointers </a>
 
@@ -170,14 +176,14 @@ int sumTwoInts(int a, int b){
 }
 ```
 
-Notice that we need a 
-
 Or even simpler:
 ```c
 int sumTwoInts(int a, int b){
     return a + b;
 }
 ```
+
+Note that **a, b** here are variables and you can treat them like variables. 
 
 We can call this function like so:
 
@@ -191,6 +197,8 @@ printf("Sum of 2, 4: %d\n", sumTwoInts(2, 4)); // 6
 ```
 
 Notice how we can use the return value directly (like in summing 2 and 4), or store it in a variable (like in summing 10 and 5). 
+
+**Note:** Sometimes people will call the variables, that take on the values of the arguments, **parameters**. So you call functions with **arguments**, and these get assigned as values to the **parameters** in the function. In other words, **parameters** are the names and **arguments** are the values. 
 
 ### <a name="Void"> Void </a>
 
@@ -212,7 +220,34 @@ int main(){
 
 So we now know that `printf` is a function of return type void. 
 
+We can also use **void** to tell **C** that our function takes in no arguments; of course, we could also just leave the arguments blank: 
+```c
+void scream(){
+    printf("AHHH THIS FUNCTION SHOULD HAVE NO ARGUMENTS!!!\n");
+}
+```
+
+The issue with this is that we can *still* call scream with arguments, but **C** will discard these arguments for us: 
+
+```c
+int main(){
+    scream(5); // still prints fine: AHHH THIS FUNCTION SHOULD HAVE NO ARGUMENTS!!!
+}
+```
+
+If we want **C** to complain and throw a fit when we try to give it arguments, then we can use **void**:
+
+```c
+void scream(void){
+    printf("AHHH THIS FUNCTION SHOULD HAVE NO ARGUMENTS!!!\n");
+}
+```
+
+Now we cannot compile this code if we call scream with arguments since **C** will complain. This is considered **good practice** because it gets the compiler to tell us when we've made a mistake, so we can catch any potential errors sooner! We already have so much hard-to-debug undefined behaviour in **C**, so let's try to make it easier on ourselves `:)`
+
 ### <a name="FunctionPrototypes"> Function Prototypes </a>
+
+
 
 ### <a name="Main"> Revisiting Main </a>
 
@@ -222,8 +257,43 @@ int main(){
 }
 ```
 
-**C** lets us get away with not explicitly returning an int, but what would it mean if we did? 
+**C** lets us get away with not explicitly returning an int for main, but what would it mean if we did? 
+- Returning **0** signals that the program exited correctly
+- Returning a **non-zero** value signals the program exited abnormally (if something goes wrong)
 
+Try to run the following program, which exits abnormally:
+```c
+#include <stdio.h>
+
+int main(){
+    printf("oopsie!\n");
+    return -1;
+}
+```
+
+It should output "oopsie!" and then signal to you that something went wrong. 
+
+**Note:** **C** compilers used to require you to explicitly return `0` from main and so there will be some compilers that error if you don't, so it's considered good practice to **use return** in your main function. Often, `-1` is used to signal incorrect execution.
+
+Did you know **main** can also receive arguments from the command-line? 
+
+```c
+int main(int argc, char* argv[]){
+    printf("Number of arguments: %d\n\n", argc);
+    
+    for (int i = 0; i < argc; i++){
+        printf("%s\n", argv[i]);
+    }
+}
+```
+
+The **main** function gets: 
+1) number of arguments which we call **argc** for **arg**ument **c**ount 
+2) an array of pointers to characters, which we'll soon see is an array of strings (in the *Revisiting Arrays* section)
+
+Right now, we won't question *how* pointers to characters are entire strings and just use **%s** to print them. 
+
+One confusing way of writing **main** is with **void** in place of arguments, because 
 ### <a name="FunctionExercises1"> Function Exercises 1 </a>
 
 1) In higher-level languages, you have to return a value from a non-void function. In **C**, you can return nothing from a non-void function like so:
@@ -331,7 +401,7 @@ Which, assuming an int takes up 4 times the space of a char (it does on my machi
 
 Well done on completing Session 2! You're almost through to the end; just one more session to go... 
 
-If you're not tired of **C** by then, then remember there's a bonus session on (INSERT DATE) 
+If you're not tired of **C** by then, then remember there's a bonus session on the 30th October! Hopefully, I'll **C** you there!
 
 - maybe do static keyword? 
 
