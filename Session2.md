@@ -3,9 +3,9 @@
 Welcome to the Cequel! 
 <small> See what I did there </small>
 
-I hope you enjoyed Session 1 and are now comfortable with using variables, for loops, and if statements to create very basic **C** programs (including commenting and being able to compile your code), and are familiar with undefined behaviour and arrays - we can now start to explore  
+I hope you enjoyed Session 1 and are now comfortable with using variables, for loops, and if statements to create very basic **C** programs (including commenting and being able to compile your code), and are familiar with arrays and the interesting part of **C**: undefined behaviour and how you can do many things in **C** which shouldn't be allowed (we'll see some more examples in this session!).  
 
-It's getting to the harder stuff ...
+It's getting to the harder - but more interesting - stuff ...
 
 Good luck and happy coding!
 
@@ -26,7 +26,13 @@ Good luck and happy coding!
     - <a href="#FunctionExercises1" style="color: black;"> Function Exercises 1 </a>
     - <a href="#PassingPointers" style="color: black;"> Passing Around Pointers </a>
     - <a href="#FunctionExercises2" style="color: black;"> Function Exercises 2 </a>
-- <a href="#Arrays" style="color: black;"> Revisiting Arrays </a>
+- <a href="#RevisitingArrays" style="color: black;"> Revisiting Arrays </a>
+    - <a href="#ArraysPointers" style="color: black;"> Arrays and Pointers </a>
+    - <a href="#PointerDecay" style="color: black;"> Array Decay </a>
+    - <a href="#PointerArithmetic" style="color: black;"> Pointer Arithmetic </a>
+    - <a href="#PointerArithmetic" style="color: black;"> Array Exercises </a>
+- <a href="#Strings" style="color: black;"> Strings </a>
+    - <a href="#StringExercises" style="color: black;"> String Exercises </a>
 - <a href="#Input" style="color: black;"> Reading Input </a>
 - <a href="#Memory" style="color: black;"> Memory Allocation </a>
     - <a href="#Malloc" style="color: black;"> Malloc </a>
@@ -294,6 +300,7 @@ The **main** function gets:
 Right now, we won't question *how* pointers to characters are entire strings and just use **%s** to print them. 
 
 One confusing way of writing **main** is with **void** in place of arguments, because 
+
 ### <a name="FunctionExercises1"> Function Exercises 1 </a>
 
 1) In higher-level languages, you have to return a value from a non-void function. In **C**, you can return nothing from a non-void function like so:
@@ -311,9 +318,49 @@ Can you see what happens when div returns nothing? Can you output its return val
 
 2) Read the solution to Exercise 1 (`cFiles/exerciseSolutions/FunctionExercises1/Exercise1.c`)
 
-3) 
+3) Using arguments to the main function, write a program that takes a first name and second name from the command-line and outputs "Your name is insert-first-name insert-last-name!"
+
+4) 
 
 ### <a name="PassingPointers"> Passing Around Pointers </a>
+
+When you pass values to a function, you are just giving it the values. Editing those values inside the function will do nothing to any variables that hold those values. For example: 
+
+```c
+void print1GreaterThanN(int n){
+    n++; 
+    printf("One greater than n: %d\n", n); 
+}
+
+int main(){
+    int x = 5; 
+    print1GreaterThanN(x);
+    printf("%d\n", x); // still 5!
+
+    return 0;
+}
+```
+
+Inside of `print1GreaterThanN`, we edit the argument (value) we're given so that we output `6`. But the original variable x still holds the value `5` so what's going on here? The variable **n** and the variable **x** actually point to different places in memory, and the value that **n** holds is a copy of the value that **x** holds (at the start of the function)! 
+
+In programming, this is referred to as **passing by value**. What if we *did* want functions to edit the value of a variable? Well, we can do this by passing a pointer! This is called **passing by reference** since we're passing a pointer which points to, or **references**, the variable. 
+
+```c
+void print1GreaterThanN(int* n){
+    (*n)++; // be very careful with brackets here! *n++ will increment the memory address of the pointer
+    printf("One greater than n: %d\n", *n); 
+}
+
+int main(){
+    int x = 5; 
+    print1GreaterThanN(&x);
+    printf("%d\n", x); // now 6!
+
+    return 0;
+}
+```
+
+Since we can get functions to edit values, we can get functions to give us data. We can already do this using **return**, but that limits us to only one value as functions can only return *one value* (or none). 
 
 - Mention that this is a way of returning multiple arguments 
 - arguments: difference between passing a pointer, and passing a regular old value
@@ -323,15 +370,122 @@ Can you see what happens when div returns nothing? Can you output its return val
 
 ### <a name="FunctionExercises2"> Function Exercises 2 </a>
 
+1) In <a href="#PassingPointers"> Passing Pointers</a>, there is an example of passing by value and we said that the variables **x, n** pointed to different places in memory. Can you edit the code to output the memory addresses of **x** and **n**, and run it to convince yourself?
 
 
-## Revisiting Arrays 
+## <a name="RevisitingArrays"> Revisiting Arrays </a>
 
-- RESEARCH and mention that arrays decay into pointers
-- Mention strings are arrays of chars?
+We saw last session that arrays are a collection of values that are stored in **contiguous** memory locations (aka the memory locations are right next to each other). 
+
+### <a name="ArraysPointers"> Arrays and Pointers </a>
+
+This sounds familiar... we know that a pointer to an int points to the first byte and the three (or more depending on the machine) other bytes are stored immediately after (or in contiguous memory). 
+
+In fact, what actually is an array? Let's print it! 
+
+```c
+int anArray[] = {2, 3, 5, 7, 11};
+printf("%d\n", anArray); // 6422016
+```
+
+That's interesting, this looks like a memory location (that we've printed using **%d** so displayed as a denary number). Let's try printing it as a pointer, and also printing the memory addresses of values in the array. 
+
+```c
+printf("Array: %p\n", anArray); // 61FE00
+
+for(int i = 0; i < 5; i++){
+    printf("Element at location: %p\n", &anArray[i]); // 61FE00, 61FE04, 61FE08, 61FE0C, 61FE10
+}
+```
+
+So the pointer to the first element points to the same address as the array! Hold on though, surely they're not the exact same because we can index arrays using `[]`. 
+
+```c
+int anArray[] = {2, 3, 5, 7, 11};
+int* p = &anArray[0];
+
+printf("%d\n", p[0]); // 2
+
+for(int i = 1; i < 5; i++){
+    printf("%d\n", p[i]); // 3, 5, 7, 11
+}
+
+return 0;
+```
+
+We can index pointers as well? Are arrays just pointers??? Not quite, but close. There is one **key** difference between arrays and pointers. 
+
+### <a name="PointerDecay"> Array Decay </a>
+
+Call `sizeof` on an array, and call `sizeof` on a pointer to the first element in the array. 
+
+```c
+int anArray[] = {2, 3, 5, 7, 11};
+int* p = &anArray[0];
+
+// one key difference: sizeof 
+
+printf("sizeof array: %d\n", sizeof(anArray)); // 20
+printf("sizeof pointer: %d\n", sizeof(p)); // 8
+```
+
+You will see that `sizeof(array)` tells us the number of bytes the array takes up, whereas `sizeof(pointer)` tells us the number of bytes that the pointer itself takes up (so how many bytes needed to store the memory address). 
+
+If we only have the pointer, then we can't find out how many elements there are in the array. So we can't index or loop through the elements of the array since we can't tell what's in the array or not, beyond the first element.
+
+So if we wanted to use a pointer as an array, we would have to keep track of the size of the array in another variable. This is important because there is a key situation where an array becomes just a pointer, and loses information about the size of the array: this is **array decay** and it happens when you pass an array to a function. 
+
+```c
+void passingArray(int passedArray[]){
+    printf("%d\n", sizeof(passedArray)); // 8 on my machine
+}
+
+int main(){
+    int ourArray[] = {1, 3, 6, 10, 15};
+    printf("%d\n", sizeof(ourArray)); // 20 on my machine  
+
+    passingArray(ourArray);
+
+    return 0;
+}
+```
+
+We can see that `ourArray` decays into `passedArray` and loses information about its size; this happens because `passedArray` **is** actually just the pointer to the first element, so its size is the size of a pointer on my machine (which is 8 bytes). Due to array decay, we have to provide the length of an array whenever we pass it through a function. 
+
+**Note:** Using `int array[]` and `int* array` is equivalent for pointers. Since an array decays into a pointer when it's passed to a function, we can use either form. 
+
+```c
+void passingArray(int* passedArray, int length){
+    printf("Last element: %d\n", passedArray[length-1]);
+}
+
+int main(){
+    int ourArray[] = {1, 3, 6, 10, 15};
+    printf("%d\n", sizeof(ourArray)); // 20 on my machine  
+
+    passingArray(ourArray, 5);
+
+    return 0;
+}
+```
+
+### <a name="PointerArithmetic"> Pointer Arithmetic </a>
+
+*Arithmetic! The mathematicians have got us in their grasp again!* 
 
 - Pointer arithmetic
-- wow, sizeof kind of makes sense -> sizeof arrays, sizeof int. Crazy 
+
+### <a name="ArrayExercises"> Array Exercises </a>
+
+1) Write a function to print all the values in an array. Can you make it so it prints all the contents on one line? 
+
+## <a name="Strings"> Strings </a>
+
+### <a name="StringExercises"> String Exercises </a>
+
+1) Write a function to reverse a string (this function should be of type void).
+
+2) Write a function to convert a string to all upper-case character (**hint:** look up the range of values for lower-case characters in ascii)
 
 ## Input 
 
