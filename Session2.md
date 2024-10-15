@@ -377,7 +377,7 @@ Can you see what happens when div returns nothing? Can you output its return val
 
 2) Read the solution to Exercise 1 (`cFiles/exerciseSolutions/FunctionExercises1/Exercise1.c`)
 
-3) Using arguments to the main function, write a program that takes a first name and second name from the command-line and outputs "Your name is insert-first-name insert-last-name!"
+3) Using arguments to the main function, write a program that takes a first name and second name from the command-line and outputs "Your name is insert-first-name insert-last-name!" (report error to the user if not 2 arguments have been passed)
 
 ### <a name="PassingPointers"> Passing Around Pointers </a>
 
@@ -595,13 +595,14 @@ for(int i = 0; i < 5; i++){
 
 ### <a name="ArrayExercises"> Array Exercises </a>
 
-1) Write a function to print all the values in an array. Can you make it so it prints all the contents on one line? 
+1) Write a function to print all the values in an int array. Can you make it so it prints all the contents on one line? 
 
-2) Can you traverse through the following array using `++` and the pointer `i`?
+2) Can you traverse through the following array using `++`, the pointer `p`, and the int `i`?
 
 ```c
 int a[] = {1, 1, 2, 3, 5, 8, 13};
-int* i; 
+int* p; 
+int i;
 ```
 
 ## <a name="Strings"> Strings </a>
