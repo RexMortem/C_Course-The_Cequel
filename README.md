@@ -2,7 +2,7 @@
 
 A basic, and hopefully gentle, introduction to the C Programming Language.
 
-(UNDER CONSTRUCTION)
+This session focuses on pointers, functions, and memory allocation. 
 
 ## What is the C Course?
 
@@ -16,13 +16,13 @@ If you're using DCS machines and don't know how to navigate Linux, use the [Linu
 
 1) First, clone the repository. If you're new to git then go to the folder you want to store the session in, and run:
 ```sh
-git clone https://github.com/RexMortem/C_Course-Introduction
+git clone https://github.com/RexMortem/C_Course-The_Cequel
 ```
 
-2) Read **Session1.pdf**; if you're on DCS machines, you can do this using **evince** or **okular** among other tools. If you're using your own machine, then most web browsers should work. Regardless of the device, I personally prefer opening pdfs in Chrome, Firefox or similar. 
+2) Read **Session2.pdf**; if you're on DCS machines, you can do this using **evince** or **okular** among other tools. If you're using your own machine, then most web browsers should work. Regardless of the device, I personally prefer opening pdfs in Chrome, Firefox or similar. 
     - Note the pdf has HTML elements including links/anchor elements (which limited pdf readers may not read properly, including GitHub's file preview)
         - The topics in the contents lists are hyperlinks which should make navigating the document much easier
-    - Alternatively, you can also read through the markdown file **Session1.md** 
+    - Alternatively, you can also read through the markdown file **Session2.md** 
 
 3) If you're really struggling then you can find sample solutions to exercises from the session inside `cFiles/exerciseSolutions`. Do have a look at the solutions after you've written a solution that you're convinced is right; it might give you ideas for how to improve your code. Please don't just read the solutions without attempting the exercises `:)`
 

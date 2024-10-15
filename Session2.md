@@ -9,8 +9,6 @@ It's getting to the harder - but more interesting - stuff ...
 
 Good luck and happy coding!
 
-- CHANGE THE README 
-
 ## Contents 
 
 - <a href="#Pointers" style="color: black;"> Pointers </a>
@@ -30,16 +28,17 @@ Good luck and happy coding!
     - <a href="#ArraysPointers" style="color: black;"> Arrays and Pointers </a>
     - <a href="#PointerDecay" style="color: black;"> Array Decay </a>
     - <a href="#PointerArithmetic" style="color: black;"> Pointer Arithmetic </a>
-    - <a href="#PointerArithmetic" style="color: black;"> Array Exercises </a>
+    - <a href="#ArrayExercises" style="color: black;"> Array Exercises </a>
 - <a href="#Strings" style="color: black;"> Strings </a>
     - <a href="#StringLiteral" style="color: black;"> Initialising Strings With Literals </a>
     - <a href="#StringManipulation" style="color: black;"> String Manipulation </a>
     - <a href="#StringExercises" style="color: black;"> String Exercises </a>
 - <a href="#Memory" style="color: black;"> Memory Allocation </a>
     - <a href="#Malloc" style="color: black;"> Malloc </a>
-    - <a href="#Malloc" style="color: black;"> Realloc </a>
-    - <a href="#Malloc" style="color: black;"> Calloc </a>
-    - <a href="#Malloc" style="color: black;"> Memory Exercises </a>
+    - <a href="#MemoryLeaks" style="color: black;"> Freeing Memory </a>
+    - <a href="#AllocationFail" style="color: black;"> What If Allocation Fails? </a>
+    - <a href="#CallocRealloc" style="color: black;"> Calloc & Realloc </a>
+    - <a href="#MemoryExercises" style="color: black;"> Memory Exercises </a>
 - <a href="#Optional" style="color: black;"> Optional Exercises </a>
 
 ## <a name="Pointers"> Pointers </a>
@@ -162,7 +161,16 @@ The null pointer is quite useful for actions which *should* give you a pointer b
 
 ### <a name="PointerExercises"> Pointer Exercises </a>
 
-1) 
+1) Given two `int*` pointers `a, b`, print their sum and product. 
+
+```c
+int x = 5; // don't use this
+int y = 6; // don't use this
+int* a = &x; // use this
+int* b = &y;  // use this 
+```
+
+Also edit the values of `x, y` through their pointers `a, b`. 
 
 2) You can set ints directly to binary or hex values like so:
 ```c
@@ -373,8 +381,6 @@ Can you see what happens when div returns nothing? Can you output its return val
 
 3) Using arguments to the main function, write a program that takes a first name and second name from the command-line and outputs "Your name is insert-first-name insert-last-name!"
 
-4) 
-
 ### <a name="PassingPointers"> Passing Around Pointers </a>
 
 When you pass values to a function, you are just giving it the values. Editing those values inside the function will do nothing to any variables that hold those values. For example: 
@@ -452,13 +458,18 @@ int main(){
 }
 ```
 
-### <a name=""> Pointers to Functions </a>
-
-
 ### <a name="FunctionExercises2"> Function Exercises 2 </a>
 
 1) In <a href="#PassingPointers"> Passing Pointers</a>, there is an example of passing by value and we said that the variables **x, n** pointed to different places in memory. Can you edit the code to output the memory addresses of **x** and **n**, and run it to convince yourself?
 
+2) Write a function `doubleMyNumber` which doubles the number passed in, in two ways:
+- one way returns the number and does not edit the original variable
+- another way edits the original value 
+
+```c
+int doubleMyNumber(int n);
+void doubleMyNumberEdit(int* n);
+```
 
 ## <a name="RevisitingArrays"> Revisiting Arrays </a>
 
@@ -560,11 +571,40 @@ int main(){
 
 *Arithmetic! The mathematicians have got us in their grasp again!* 
 
-- Pointer arithmetic
+You can perform operations on pointers! Most importantly, increment (`++`). Be careful though, because pointer arithmetic isn't exactly the same as integer arithmetic. 
+
+```c
+int a = 0;
+int* p = &a; 
+
+printf("%p\n", p); // 61FE14
+
+p++; // increment by 1
+
+printf("%p\n", p); // 61FE18
+```
+
+So incrementing by `1` increased the pointer's address by `4`! It turns out the number that the memory address increases by **depends on the type of the pointer**. This extends to regular old addition as well! So you can actually traverse an array by adding to the pointer like so:
+
+```c
+int array[] = {1, 1, 2, 3, 5};
+
+for(int i = 0; i < 5; i++){
+    printf("%d\n", *(array+i)); // 1, 1, 2, 3, 5
+}
+```
+*Though only psychopaths traverse like this* 
 
 ### <a name="ArrayExercises"> Array Exercises </a>
 
 1) Write a function to print all the values in an array. Can you make it so it prints all the contents on one line? 
+
+2) Can you traverse through the following array using `++` and the pointer `i`?
+
+```c
+int a[] = {1, 1, 2, 3, 5, 8, 13};
+int* i; 
+```
 
 ## <a name="Strings"> Strings </a>
 
@@ -647,6 +687,10 @@ printf("%s\n", someText); // AAAAAAAAAAAAAAAAAAAAA
 1) Write a function to reverse a string (this function should be of type void).
 
 2) Write a function to convert a string to all upper-case character (**hint:** look up the range of values for lower-case characters in ascii)
+
+3) Write a function to convert alternate the cases of the character (i.e. lower-case characters go to upper-case characters, upper-case characters go to lower-case characters). 
+
+4) Write a function to that discards every other character in a string (so `"Edward"` -> `"dad"`).
 
 ## <a name="Macros"> Preprocessing and Macros </a>
 
@@ -740,6 +784,48 @@ int main(){
 }
 ```
 
+###  <a name="CallocRealloc"> Calloc & Realloc </a>
+
+As well as **malloc**, `<stdlib.h>` gives us its twins **calloc** and **realloc**.  
+
+Calloc does the same thing as malloc except it also resets the contents of each value (to `0`) - remember **c**lear for **c**alloc. Since it resets each value, it requires you to specify the number of bytes each value takes up. 
+
+```c
+int* p = calloc(10, sizeof(int));
+```
+
+Realloc is for **re**allocating memory. If you used malloc to create a block of memory and realised you need more, then you can use realloc. It requires you to give the pointer to the original block of memory, and also the new size needed.
+
+**Be careful when using Realloc!** Just like malloc, if realloc fails then it returns a null pointer. Therefore, if you want to keep your original block of memory if it fails, then you shouldn't directly write to the original pointer. Here's an example with some checking for failure: 
+
+```c
+int* p = malloc(10 * sizeof(int));
+
+// oh no! I actually need 20 ints 
+
+int* np = realloc(p, 20 * sizeof(int));
+
+if(np == NULL){
+    return -1; 
+}
+
+p = np;
+return 0;
+```
+
+### <a name="MemoryExercises"> Memory Exercises </a>
+
+1) Create a function `doubleString` that takes a string and duplicates it (so `"hello"` -> `"hellohello"`). 
+
+```c
+void doubleString();
+```
+
+2) Create a function `addComplement` that takes a target `x` and an array of integers `arr`, and adds at the end of `arr` the "complements" of each of the integers (a complement here is defined as the integer you'd have to add to the original integer to get to `x` i.e. `i + j = x` where i is the original integer, and j is the complement). 
+
+```c
+void addComplement(int x, int arr[])
+```
 ## Next Session…
 
 Well done on completing Session 2! You're almost through to the end; just one more session to go... 
@@ -764,6 +850,8 @@ int removeFromArrayList(int* array, int indexToRemoveFrom); // (make the other v
 We will see next session how we might create a more ergonomic ArrayList. 
 
 2) Create a Stack. 
+
+If you want more **C** exercises, sign up to [Hackerrank](https://www.hackerrank.com)! It has quite a few introductory **C** problems. 
 
 ## Acknowledgements
 
