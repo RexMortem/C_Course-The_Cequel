@@ -20,9 +20,14 @@ Good luck and happy coding!
     - <a href="#NullPointer" style="color: black;"> The Null Pointer </a>
     - <a href="#PointerExercises" style="color: black;"> Pointer Exercises </a>
 - <a href="#Functions" style="color: black;"> Functions </a>
+    - <a href="#Void" style="color: black;"> Void </a>
+    - <a href="#FunctionPrototypes" style="color: black;"> Function Prototypes </a>
     - <a href="#Functions" style="color: black;"> Revisiting Hello World </a>
 
 - <a href="#Input" style="color: black;"> Reading Input </a>
+
+
+- Finish exercises for pointers
 
 ## <a name="Pointers"> Pointers </a>
 
@@ -99,7 +104,12 @@ We can also initialise variables for pointers which require:
 
 Of course, you can opt to just *declare* the pointer and not give it a value but this will lead to undefined behaviour.
 
-- different ways of formatting pointers (where to position *)
+Interestingly, the position of the **\*** doesn't matter as long as it's between the type and the name of the pointer. All of the following are valid pointer declarations:
+```c
+char* a, char * b, char *c;
+```
+
+I would personally recommend the first one: putting the **\*** next to the type makes it obvious that it's related to the type. For example, that `char*` is a type that is different from the type `char`.  
 
 ### <a name="Dereferencing"> Dereferencing Pointers </a>
 
@@ -125,7 +135,15 @@ printf("%d\n", a); // 4
 
 ### <a name="NullPointer"> The Null Pointer </a>
 
+There's a special kind of pointer that points to no memory address called the **null** pointer. This value is special because any type of pointer can be set to **null**!
 
+```c
+int* p1 = NULL;
+char* p2 = NULL;
+short* p3 = NULL;
+```
+
+Note that the definition for the null pointer lives inside 
 ### <a name="PointerExercises"> Pointer Exercises </a>
 
 - Hex and Binary exercise (explain how to use)
@@ -134,19 +152,96 @@ printf("%d\n", a); // 4
 ## <a name="Functions"> Functions </a>
 
 If you want to write good code, then you want to write organised code. You want to write code that easily clicks into place with other code like lego, and can be easily reused.
-This is called **Adaptability:** how easily and quickly you can modify your code to introduce new features. 
+This is called **adaptability:** how easily and quickly you can modify your code to introduce new features. 
 
 We can organise our code more with **functions**, which we've already been using (**printf** is a function)! A function is a block of code that we can execute by **calling** the function, with some properties:
 - you can pass values to the function by calling the function with **arguments**; think about *printf* - it wouldn't be very useful if you couldn't pass it the values you want to output 
-- the function *can* **return** a *single* value to its caller
+- the function can **return** a *single* value to its caller
 
 The syntax of declaring a function:
 
 ![An image showing how functions are declared](images/FunctionDeclarationSyntax.PNG)
 
+An example of a simple function:
+```c 
+int sumTwoInts(int a, int b){
+    int result = a + b;
+    return result; // result matches return type of sumTwoInts (int)
+}
+```
+
+Notice that we need a 
+
+Or even simpler:
+```c
+int sumTwoInts(int a, int b){
+    return a + b;
+}
+```
+
+We can call this function like so:
+
+```c
+int x = 10;
+int y = 5;
+int sum = sumTwoInts(x, y); 
+
+printf("Sum of x, y: %d\n", sum); // 15
+printf("Sum of 2, 4: %d\n", sumTwoInts(2, 4)); // 6
+```
+
+Notice how we can use the return value directly (like in summing 2 and 4), or store it in a variable (like in summing 10 and 5). 
+
+### <a name="Void"> Void </a>
+
+Sometimes, like in `printf`, you may not want to return something: you might want the function to just carry out some action(s) and have no reason to return anything.
+
+You can just set the function's return type to **void**:
+
+```c
+#include <stdio.h>
+
+void shout(){
+    printf("THIS FUNCTION SHOUTS THIS MESSAGE!!!!!!\n");
+}
+
+int main(){
+    shout(); // trying to set a variable's value to this will error!
+}
+```
+
+So we now know that `printf` is a function of return type void. 
+
+### <a name="FunctionPrototypes"> Function Prototypes </a>
+
 ### <a name="Main"> Revisiting Main </a>
 
+Now that we know about functions, we can revisit our old friend - the **main** function. 
+```c
+int main(){
+}
+```
+
+**C** lets us get away with not explicitly returning an int, but what would it mean if we did? 
+
 ### <a name="FunctionExercises1"> Function Exercises 1 </a>
+
+1) In higher-level languages, you have to return a value from a non-void function. In **C**, you can return nothing from a non-void function like so:
+
+```c
+int div(int a, int b){
+    if(b != 0){
+        return a/b;
+    }
+}
+```
+*No value is returned from div when b=0*
+
+Can you see what happens when div returns nothing? Can you output its return value? 
+
+2) Read the solution to Exercise 1 (`cFiles/exerciseSolutions/FunctionExercises1/Exercise1.c`)
+
+3) 
 
 ### <a name="PassingPointers"> Passing Around Pointers </a>
 
@@ -177,12 +272,58 @@ USEFUL EXERCISE: https://www.hackerrank.com/challenges/playing-with-characters/p
 
 - Recommend Hackerrank? 
 
-## <a name="Macros"> Intro to Macros </a>
+## <a name="Macros"> Preprocessing and Macros </a>
 
-- booleans using macros 
+In Session 1, we briefly mentioned preprocessor directives which is what `#include` is. To understand them, we need to discuss **preprocessing**. 
+
+![Diagram to show preprocessing and compiling; you preprocess C code to get expanded C code, which compiles to give you a runnable exe](images/Preprocessing.png)
+
+*Note that there are more stages you can split building a C file into, but this is as far as we'll break it down in this course*
+
+The **define** preprocessor directive lets us define a macro by telling the compiler to replace text in your code (the macro) with other text (the text that is defined by your macro):
+
+![Text to define a macro which reads: #define thingToReplace whatToReplaceWith](images/MacroSyntax.PNG)
+*Here 'thingToReplace' is also the name of your macro*
+
+It can be useful to define **true** and **false** in this way: 
+
+```c
+#define true 1
+#define false 0 
+```
+*Everytime you write 'true', it will be replaced with '1' after preprocessing*
+
+You might ask: **why use macros?** 
+
+There are a couple reasons but one is **performance** 
+- no memory used for variable
+- no cost from using the variable, or calling a function 
+- 
+
 - mention it'll be useful for next session (sneak peak?)
 
-## MEMORY MANAGEMENT!!! 
+## <a name="Memory"> Memory Allocation </a>
+
+Arrays have a fixed size that we have to specify in the **C** code, but sometimes we want to grow our array according to a variable's value (dynamic size). For example, if we want to store a list of **n** numbers where **n** is inputted by a user. Luckily, the standard library (`<stdlib.h>`) has got us covered with malloc, realloc, and calloc!
+
+### <a name="Malloc"> Malloc </a>
+
+We can use **malloc**! We can **alloc**ate **m**emory with **malloc**; we just need to tell it how many bytes we want and it'll give us a pointer to that block of memory. So if we want to store 20 characters, then we'll need to allocate (probably) 20 bytes; if we want to store 20 ints, we'll need to allocate (probably) 80 bytes. We don't have to rely on chars and ints being a byte or 4 bytes each though, since we know how to get their size from Session 1: 
+
+```c
+int nItems = 20; 
+int* p = malloc(nItems * sizeof(int)); 
+```
+
+Hang on though, how can malloc return a pointer that works for any type we want a block of memory for? This is because malloc returns a pointer of a special type: **void\*** which begs the question, what does a pointer to **void** mean? It means that we don't specify what type of data it points to, which makes sense since malloc should just give us the memory address to the start of the block of memory. This gives us the flexibility to convert a **void\*** pointer to an **int\*** pointer, **char\*** pointer, **short\*** pointer etc.
+
+We could easily do:
+```c
+char* cP = malloc(10 * sizeof(int)); // 40 bytes on my machine
+```
+
+Which, assuming an int takes up 4 times the space of a char (it does on my machine), is a block of memory that can store 40 chars. 
+
 
 - malloc, calloc, realloc
 
@@ -190,7 +331,7 @@ USEFUL EXERCISE: https://www.hackerrank.com/challenges/playing-with-characters/p
 
 Well done on completing Session 2! You're almost through to the end; just one more session to go... 
 
-If you're not tired of C by then, then remember there's a bonus session on (INSERT DATE) 
+If you're not tired of **C** by then, then remember there's a bonus session on (INSERT DATE) 
 
 - maybe do static keyword? 
 
