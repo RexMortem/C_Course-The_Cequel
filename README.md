@@ -33,4 +33,3 @@ If there are any problems with the course or suggestions (especially with improv
 ## Acknowledgements 
 
 Originally made by Edward Denton, as Academic Officer for UWCS. 
-Thanks to Alia Meek (President) for proof-reading Session 1. 
